@@ -3,9 +3,10 @@ import requests
 
 TOKEN = os.environ["DISCORD_BOT_TOKEN"]
 CHANNEL_ID = os.environ["DISCORD_CHANNEL_ID"]
-APP_KEY = os.environ["ALI_APP_KEY"]
-APP_SECRET = os.environ["ALI_APP_SECRET"]
-TRACKING_ID = os.environ["ALI_TRACKING_ID"]
+APP_KEY = os.environ["ALI_APP_KEY"].strip()
+APP_SECRET = os.environ["ALI_APP_SECRET"].strip()
+TRACKING_ID = os.environ["ALI_TRACKING_ID"].strip()
+print("key length:", len(APP_KEY), "| secret length:", len(APP_SECRET), "| tracking:", TRACKING_ID)
 
 MAX_PER_RUN = int(os.environ.get("MAX_PER_RUN", "3"))
 GATEWAY = "https://api-sg.aliexpress.com/sync"
