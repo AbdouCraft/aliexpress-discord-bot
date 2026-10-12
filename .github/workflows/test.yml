@@ -14,5 +14,5 @@ jobs:
       - run: pip install requests
       - run: python test_discord.py
         env:
-          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
+          DISCORD_BOT_TOKEN: ${{ MTU1ODgyMTkyMDMyODM4ODc1OA.GL5zj8._8-qBsT6iGAZSI3lIn9E3kRBHZD7lMRfHHYcZ8 }}
+          DISCORD_CHANNEL_ID: ${{ 1534306485096419438 }}
