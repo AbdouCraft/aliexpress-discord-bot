@@ -1,17 +1,18 @@
-import os, requests
+name: Test Discord
 
-TOKEN = os.environ["DISCORD_BOT_TOKEN"]
-CHANNEL_ID = os.environ["DISCORD_CHANNEL_ID"]
+on:
+  workflow_dispatch:
 
-r = requests.post(
-    f"https://discord.com/api/v10/channels/{CHANNEL_ID}/messages",
-    headers={"Authorization": f"Bot {TOKEN}"},
-    json={"embeds": [{
-        "title": "✅ اختبار البوت",
-        "description": "إذا ظهرت هذه الرسالة فكل شيء في Discord يعمل.",
-        "color": 0x22C55E,
-    }]},
-    timeout=30,
-)
-print(r.status_code, r.text)
-r.raise_for_status()
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - run: python test_discord.py
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
