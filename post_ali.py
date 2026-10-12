@@ -37,15 +37,16 @@ def search(keyword):
         "sort": "LAST_VOLUME_DESC",
         "target_currency": "USD",
         "target_language": "EN",
-        "ship_to_country": "DZ",
     }
     params["sign"] = sign(params)
     r = requests.get(GATEWAY, params=params, timeout=30)
+    print("HTTP status:", r.status_code)
     data = r.json()
+    print("Raw response:", json.dumps(data, ensure_ascii=False)[:1500])
     try:
         return data["aliexpress_affiliate_product_query_response"]["resp_result"]["result"]["products"]["product"]
-    except KeyError:
-        print("Unexpected API response:", json.dumps(data, ensure_ascii=False)[:1500])
+    except (KeyError, TypeError):
+        print("Could not find products in response.")
         return []
 
 
