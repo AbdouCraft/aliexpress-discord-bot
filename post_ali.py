@@ -25,30 +25,43 @@ def sign(params):
     return hmac.new(APP_SECRET.encode(), base.encode(), hashlib.sha256).hexdigest().upper()
 
 
+GATEWAYS = [
+    "https://api-sg.aliexpress.com/sync",
+    "https://api.aliexpress.com/sync",
+    "https://eco.taobao.com/router/rest",
+]
+
+
 def search(keyword):
-    params = {
-        "app_key": APP_KEY,
-        "method": "aliexpress.affiliate.product.query",
-        "sign_method": "sha256",
-        "timestamp": str(int(time.time() * 1000)),
-        "keywords": keyword,
-        "tracking_id": TRACKING_ID,
-        "page_no": "1",
-        "page_size": "20",
-        "sort": "LAST_VOLUME_DESC",
-        "target_currency": "USD",
-        "target_language": "EN",
-    }
-    params["sign"] = sign(params)
-    r = requests.get(GATEWAY, params=params, timeout=30)
-    print("HTTP status:", r.status_code)
-    data = r.json()
-    print("Raw response:", json.dumps(data, ensure_ascii=False)[:1500])
-    try:
-        return data["aliexpress_affiliate_product_query_response"]["resp_result"]["result"]["products"]["product"]
-    except (KeyError, TypeError):
-        print("Could not find products in response.")
-        return []
+    for gw in GATEWAYS:
+        params = {
+            "app_key": APP_KEY,
+            "method": "aliexpress.affiliate.product.query",
+            "sign_method": "sha256",
+            "timestamp": str(int(time.time() * 1000)),
+            "keywords": keyword,
+            "tracking_id": TRACKING_ID,
+            "page_no": "1",
+            "page_size": "20",
+            "sort": "LAST_VOLUME_DESC",
+            "target_currency": "USD",
+            "target_language": "EN",
+        }
+        params["sign"] = sign(params)
+        try:
+            r = requests.get(gw, params=params, timeout=30)
+            data = r.json()
+        except Exception as e:
+            print("Gateway", gw, "failed:", e)
+            continue
+        print("Gateway:", gw, "| HTTP:", r.status_code)
+        print("Raw response:", json.dumps(data, ensure_ascii=False)[:800])
+        try:
+            return data["aliexpress_affiliate_product_query_response"]["resp_result"]["result"]["products"]["product"]
+        except (KeyError, TypeError):
+            continue
+    print("No gateway returned products.")
+    return []
 
 
 keywords = load("keywords.json", ["gaming mouse"])
