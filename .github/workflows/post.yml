@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install requests
-      - run: python post.py
+      - run: python post_ali.py
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
